@@ -89,7 +89,7 @@ def plot_block_predictions(
 # =========================
 if __name__ == "__main__":
     # 1. Data path y detección dinámica de estaciones (archivos CSV)
-    data_path = "intervals"
+    data_path = "data/intervals"
     depth = "0.5000"
 
     # Obtenemos la lista de archivos .csv en data_path (sin extensión)

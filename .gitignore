@@ -9,3 +9,5 @@ __pycache__/
 
 data/merged.csv
 data/intervals/*
+
+experiment-*
