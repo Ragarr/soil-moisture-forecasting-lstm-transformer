@@ -165,13 +165,13 @@ def main():
     for t in top:
         t["outstanding"] = True
 
-    print("Intervalos destacados seleccionados:")
+    print("Selected highlighted intervals:")
     for info in top:
         dev = info["device"]
         s, e = info["start"], info["end"]
         days = (e - s).days + 1
         pts = info["count"]
-        print(f"Device: {dev} | Rango: {s.date()} → {e.date()} | Días: {days} | Puntos: {pts}")
+        print(f"Device: {dev} | Range: {s.date()} → {e.date()} | Days: {days} | Points: {pts}")
 
 
     for info in top:
@@ -185,40 +185,40 @@ def main():
         # Export CSV
         cleaned.to_csv(os.path.join(out_dir, fname + ".csv"), index=False)
 
-        # 1) Gráfico del intervalo limpio
+        # 1) Plot of the cleaned interval
         fig, ax = plt.subplots(figsize=(15,5))
         ax.scatter(cleaned["ts"], cleaned["soil_moisture"],
-                   s=3, color="tab:green", label="SM procesado")
+                   s=3, color="tab:green", label="Processed SM")
         ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         ax.grid(which='major', linestyle='-', linewidth=0.5, alpha=0.7)
-        ax.set_title(f"{dev} limpio: {s.date()} → {e.date()}")
-        ax.set_xlabel("Tiempo (ts)")
-        ax.set_ylabel("SM normalizado")
+        ax.set_title(f"{dev} cleaned: {s.date()} → {e.date()}")
+        ax.set_xlabel("Time (ts)")
+        ax.set_ylabel("Normalized SM")
         ax.legend()
         ax.tick_params(axis="x", labelrotation=45)
         fig.savefig(os.path.join(out_dir, fname + "_cleaned.png"))
         plt.close(fig)
 
-        # 2) Gráfico del dispositivo completo con el intervalo subrayado
+        # 2) Plot of the full device with the interval highlighted
         raw = df[df["device"] == dev].copy()
         fig, ax = plt.subplots(figsize=(15,5))
         ax.scatter(raw["ts"], raw["sensor1"], s=3, label="Sensor 1", color="tab:blue")
         ax.scatter(raw["ts"], raw["sensor2"], s=3, label="Sensor 2", color="tab:orange")
-        # Subrayar el intervalo seleccionado con fondo verde
+        # Highlight the selected interval with a green background
         ax.axvspan(s, e, facecolor="lightgreen", alpha=0.3, zorder=1)
         ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         ax.grid(which='major', linestyle='-', linewidth=0.5, alpha=0.7)
-        ax.set_title(f"{dev} completo: intervalo {s.date()} → {e.date()}")
-        ax.set_xlabel("Tiempo (ts)")
-        ax.set_ylabel("Valor del Sensor")
+        ax.set_title(f"{dev} full: interval {s.date()} → {e.date()}")
+        ax.set_xlabel("Time (ts)")
+        ax.set_ylabel("Sensor Value")
         ax.legend()
         ax.tick_params(axis="x", labelrotation=45)
         fig.savefig(os.path.join(out_dir, fname + "_full.png"))
         plt.close(fig)
 
-    print("Exportados los CSV y ambos gráficos para cada intervalo destacado.")
+    print("Exported CSVs and both plots for each highlighted interval.")
 
 if __name__ == "__main__":
     main()
