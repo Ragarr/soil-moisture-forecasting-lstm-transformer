@@ -22,82 +22,50 @@ It includes robust data preprocessing, model training, hyperparameter optimizati
 
 ```mermaid
 flowchart TD
-    A[Data Collection]
-    A1[Soil moisture sensor data (Duero)]
-    A2[Meteorological data]
-    A --> A1
-    A --> A2
+    A[Data Collection] --> B[Preprocessing]
+    B --> C[Segmentation]
+    C --> D[ML Preparation]
+    D --> E[Model Definition]
+    E --> F[Optimization]
+    F --> G[Evaluation]
+    G --> H[Final Results]
 
-    B[Preprocessing (generate_dataset.py)]
-    B1[Cleaning and validation]
-    B2[Combine meteorological data]
-    B3[Merge sensor and meteorological data]
-    B4[Generate unified dataset]
-    B --> B1
-    B --> B2
-    B --> B3
-    B --> B4
+    A --> A1((Soil moisture sensor data (Duero)))
+    A --> A2((Meteorological data))
 
-    C[Segmentation (segmentate_data.py)]
-    C1[Filter by device]
-    C2[Remove outliers (IQR)]
-    C3[Detect abrupt jumps (>0.1)]
-    C4[Segment by gaps >3 days]
-    C5[Score and select intervals]
-    C --> C1
-    C --> C2
-    C --> C3
-    C --> C4
-    C --> C5
+    B --> B1((Cleaning and validation))
+    B --> B2((Combine meteorological data))
+    B --> B3((Merge sensor and meteorological data))
+    B --> B4((Generate unified dataset))
 
-    D[ML Preparation (models.py)]
-    D1[Normalize to -1,1]
-    D2[Generate temporal sequences]
-    D3[Split train/val/test]
-    D --> D1
-    D --> D2
-    D --> D3
+    C --> C1((Filter by device))
+    C --> C2((Remove outliers (IQR)))
+    C --> C3((Detect abrupt jumps (>0.1)))
+    C --> C4((Segment by gaps >3 days))
+    C --> C5((Score and select intervals))
 
-    E[Model Definition]
-    E1[LSTM with dropout]
-    E2[Transformer]
-    E3[Dummy (baseline)]
-    E --> E1
-    E --> E2
-    E --> E3
+    D --> D1((Normalize to -1,1))
+    D --> D2((Generate temporal sequences))
+    D --> D3((Split train/val/test))
 
-    F[Optimization (search_train_hiperparameters.py)]
-    F1[Hyperparameter search (Optuna)]
-    F2[Early stopping]
-    F3[Temporal validation]
-    F4[Save best configs]
-    F --> F1
-    F --> F2
-    F --> F3
-    F --> F4
+    E --> E1((LSTM with dropout))
+    E --> E2((Transformer))
+    E --> E3((Dummy (baseline)))
 
-    G[Evaluation (graph_best_trial_bloque.py)]
-    G1[Load best model]
-    G2[Predictions by horizon]
-    G3[Calculate metrics (RMSE, R2)]
-    G4[Visualize results]
-    G --> G1
-    G --> G2
-    G --> G3
-    G --> G4
+    F --> F1((Hyperparameter search (Optuna)))
+    F --> F2((Early stopping))
+    F --> F3((Temporal validation))
+    F --> F4((Save best configs))
 
-    H[Final Results]
-    H1[Optimized models]
-    H2[Performance metrics]
-    H3[Comparative visualizations]
-    H4[Experiment logs]
-    H --> H1
-    H --> H2
-    H --> H3
-    H --> H4
+    G --> G1((Load best model))
+    G --> G2((Predictions by horizon))
+    G --> G3((Calculate metrics (RMSE, R2)))
+    G --> G4((Visualize results))
 
-    %% Pipeline flow
-    A --> B --> C --> D --> E --> F --> G --> H
+    H --> H1((Optimized models))
+    H --> H2((Performance metrics))
+    H --> H3((Comparative visualizations))
+    H --> H4((Experiment logs))
 ```
 ---
 
