@@ -20,53 +20,8 @@ It includes robust data preprocessing, model training, hyperparameter optimizati
 
 ### Workflow diagram
 
-```mermaid
-flowchart TD
-    A[Data Collection] --> B[Preprocessing]
-    B --> C[Segmentation]
-    C --> D[ML Preparation]
-    D --> E[Model Definition]
-    E --> F[Optimization]
-    F --> G[Evaluation]
-    G --> H[Final Results]
+#TODO: ADD DIAGRAM
 
-    A --> A1[Soil moisture sensor data (Duero)]
-    A --> A2[Meteorological data]
-
-    B --> B1[Cleaning and validation]
-    B --> B2[Combine meteorological data]
-    B --> B3[Merge sensor and meteorological data]
-    B --> B4[Generate unified dataset]
-
-    C --> C1[Filter by device]
-    C --> C2[Remove outliers (IQR)]
-    C --> C3[Detect abrupt jumps (>0.1)]
-    C --> C4[Segment by gaps >3 days]
-    C --> C5[Score and select intervals]
-
-    D --> D1[Normalize to -1,1]
-    D --> D2[Generate temporal sequences]
-    D --> D3[Split train/val/test]
-
-    E --> E1[LSTM with dropout]
-    E --> E2[Transformer]
-    E --> E3[Dummy (baseline)]
-
-    F --> F1[Hyperparameter search (Optuna)]
-    F --> F2[Early stopping]
-    F --> F3[Temporal validation]
-    F --> F4[Save best configs]
-
-    G --> G1[Load best model]
-    G --> G2[Predictions by horizon]
-    G --> G3[Calculate metrics (RMSE, R2)]
-    G --> G4[Visualize results]
-
-    H --> H1[Optimized models]
-    H --> H2[Performance metrics]
-    H --> H3[Comparative visualizations]
-    H --> H4[Experiment logs]
-```
 ---
 
 ## Repository Structure
