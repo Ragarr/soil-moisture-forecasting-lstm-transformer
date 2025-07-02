@@ -22,75 +22,75 @@ It includes robust data preprocessing, model training, hyperparameter optimizati
 
 ```mermaid
 flowchart TD
-    A[📊 Data Collection]
+    A[Data Collection]
     A1[Soil moisture sensor data (Duero)]
     A2[Meteorological data]
     A --> A1
     A --> A2
 
-    B[🔄 Preprocessing<br/>(generate_dataset.py)]
+    B[Preprocessing (generate_dataset.py)]
     B1[Cleaning and validation]
-    B2[Combine hourly meteorological data]
-    B3[Merge sensor + meteorological data]
+    B2[Combine meteorological data]
+    B3[Merge sensor and meteorological data]
     B4[Generate unified dataset]
     B --> B1
     B --> B2
     B --> B3
     B --> B4
 
-    C[🔍 Segmentation<br/>(segmentate_data.py)]
-    C1[Filter by specific device]
+    C[Segmentation (segmentate_data.py)]
+    C1[Filter by device]
     C2[Remove outliers (IQR)]
     C3[Detect abrupt jumps (>0.1)]
-    C4[Segment by temporal gaps >3 days]
-    C5[Scoring to select best intervals]
+    C4[Segment by gaps >3 days]
+    C5[Score and select intervals]
     C --> C1
     C --> C2
     C --> C3
     C --> C4
     C --> C5
 
-    D[📈 ML Preparation<br/>(models.py)]
-    D1[Normalization to [-1,1]]
-    D2[Temporal sequence generation]
-    D3[Split into train/val/test sets]
+    D[ML Preparation (models.py)]
+    D1[Normalize to -1,1]
+    D2[Generate temporal sequences]
+    D3[Split train/val/test]
     D --> D1
     D --> D2
     D --> D3
 
-    E[🤖 Model Definition]
-    E1[LSTM (with dropout)]
+    E[Model Definition]
+    E1[LSTM with dropout]
     E2[Transformer]
-    E3[Dummy (baseline) model]
+    E3[Dummy (baseline)]
     E --> E1
     E --> E2
     E --> E3
 
-    F[⚙️ Optimization<br/>(search_train_hiperparameters.py)]
+    F[Optimization (search_train_hiperparameters.py)]
     F1[Hyperparameter search (Optuna)]
     F2[Early stopping]
     F3[Temporal validation]
-    F4[Save best configurations]
+    F4[Save best configs]
     F --> F1
     F --> F2
     F --> F3
     F --> F4
 
-    G[📊 Evaluation<br/>(graph_best_trial_bloque.py)]
-    G1[Load best trained model]
-    G2[Predictions in blocks by forecast horizon]
-    G3[Metrics (RMSE, R²)]
-    G4[Result visualization]
+    G[Evaluation (graph_best_trial_bloque.py)]
+    G1[Load best model]
+    G2[Predictions by horizon]
+    G3[Calculate metrics (RMSE, R2)]
+    G4[Visualize results]
     G --> G1
     G --> G2
     G --> G3
     G --> G4
 
-    H[📈 Final Results]
-    H1[Optimized trained models]
+    H[Final Results]
+    H1[Optimized models]
     H2[Performance metrics]
     H3[Comparative visualizations]
-    H4[Complete experiment logs]
+    H4[Experiment logs]
     H --> H1
     H --> H2
     H --> H3
@@ -98,7 +98,6 @@ flowchart TD
 
     %% Pipeline flow
     A --> B --> C --> D --> E --> F --> G --> H
-
 ```
 ---
 
