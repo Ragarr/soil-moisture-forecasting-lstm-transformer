@@ -20,7 +20,7 @@ It includes robust data preprocessing, model training, hyperparameter optimizati
 
 ### Workflow diagram
 
-#TODO: ADD DIAGRAM
+![diagram-export-3-7-2025-10_59_40](https://github.com/user-attachments/assets/ab834b9d-e1f9-4fd6-a4f9-b0734d1722db)
 
 ---
 
