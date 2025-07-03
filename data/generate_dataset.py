@@ -5,6 +5,7 @@ import os
 hum_sensors_path = "data/humidity/raw.csv"
 meteo_path = "data/meteo/"
 output_path = "data/merged.csv"
+documentation_path = "data/dataset_documentation.md"
 
 
 # load humidity df the raw datasets
@@ -86,9 +87,78 @@ hum_sensors = hum_sensors.groupby(['device', 'ts']).mean().reset_index()
 # ahora vamos a hacer un merge de los dos dataframes
 merged_df = pd.merge(hum_sensors, meteo_df, on='ts', how='left')
 
+# función para generar documentación del dataset
+def generate_dataset_documentation(df, output_path):
+    """
+    Generates a markdown file with dataset documentation
+    """
+    doc_content = f"""# Soil Moisture and Meteorological Data Dataset Documentation
+
+## General Description
+This dataset combines soil moisture sensor data with meteorological data for humidity prediction analysis.
+
+## Dataset Structure
+- **Total number of records**: {len(df):,}
+- **Number of columns**: {len(df.columns)}
+- **Time period**: {df['ts'].min()} to {df['ts'].max()}
+- **Unique devices**: {df['device'].nunique() if 'device' in df.columns else 'N/A'}
+
+## Attribute Description
+
+### Identification and Time
+- **device**: Unique sensor device identifier (format: 18-digit number)
+- **ts**: Measurement timestamp (hourly frequency)
+
+### Soil Moisture Sensors
+- **sensor1**: Reading from the first soil moisture sensor
+- **sensor2**: Reading from the second soil moisture sensor
+- **var_s1**: Variance or variability of sensor 1
+- **var_s2**: Variance or variability of sensor 2
+- **voltaje**: Voltage level of the sensor device
+
+### Meteorological Variables
+- **precipitacion**: Precipitation in liters per square meter (l/m²)
+- **humedad_ambiente**: Relative ambient humidity in percentage (%)
+- **temperatura**: Temperature in degrees Celsius (°C)
+- **radiacion_solar**: Solar radiation measurement
+- **viento**: Wind speed
+
+## Data Sources
+1. **Humidity sensors**: Data collected from IoT devices installed in the field
+2. **Meteorological data**: Weather station #59 (closest to the sensor installation)
+
+## Data Processing
+- Sensor data was filtered to remove missing values and invalid records
+- Meteorological data was reshaped from daily to hourly structure
+- Sensor data was downsampled to synchronize with hourly meteorological frequency
+- Datasets were combined using timestamp-based merge
+
+## Data Quality
+- **Missing values**: Records with critical missing data were removed
+- **Validation**: Only meteorological measurements marked as valid ('V') were included
+- **Filtering**: Devices with invalid IDs were excluded from analysis
+
+## Usage Notes
+- Timestamps are in local time without timezone information
+- Sensor measurements represent hourly averages when multiple readings per hour existed
+- Missing values in meteorological variables may indicate periods without station coverage
+
+---
+*Documentation automatically generated on {pd.Timestamp.now().strftime('%Y-%m-%d %H:%M:%S')}*
+"""
+    
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write(doc_content)
+    
+    print(f"Documentación del dataset guardada en {output_path}")
+
 # guardar el dataframe en un archivo csv
 print(f"Guardando el dataframe en {output_path}")
 merged_df.to_csv(output_path, index=False)
+
+# generar documentación
+generate_dataset_documentation(merged_df, documentation_path)
+
 print("Sample del dataframe:")
 print(merged_df.head())
 
