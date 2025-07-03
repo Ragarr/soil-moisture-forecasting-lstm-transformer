@@ -85,11 +85,11 @@ def segment_data_by_time_gaps(device_data, timestamp_col='ts',
     return valid, cut_points
 
 def compute_custom_score(interval_df,
-                         weight_duration=1,
-                         weight_count=1,
-                         weight_corr=1,
-                         weight_outlier=1,
-                         weight_low=1,
+                         weight_duration=1.0,
+                         weight_count=1.0,
+                         weight_corr=1.0,
+                         weight_outlier=1.0,
+                         weight_low=1.0,
                          low_threshold=0.02):
     """
     Score = base_score * penalty_factor
@@ -110,14 +110,20 @@ def compute_custom_score(interval_df,
         return len(s[(s<lb)|(s>ub)]) / len(s)
 
     outlier_factor = max(0, 1 - (frac_out(interval_df["sensor1"]) + frac_out(interval_df["sensor2"]))/2)
-    base_score = (duration**weight_duration) * \
-                 (count**weight_count) * \
-                 (corr**weight_corr) * \
-                 (outlier_factor**weight_outlier)
+    # Convertir pesos a float para permitir valores decimales
+    w1 = float(weight_duration)
+    w2 = float(weight_count)
+    w3 = float(weight_corr)
+    w4 = float(weight_outlier)
+    w5 = float(weight_low)
+    base_score = (duration**w1) * \
+                 (count**w2) * \
+                 (corr**w3) * \
+                 (outlier_factor**w4)
 
     sm_norm = (4095 - interval_df["sensor1"]) / 4095
     low_frac = (sm_norm < low_threshold).mean()
-    penalty = max(0, 1 - weight_low * low_frac)
+    penalty = max(0, 1 - w5 * low_frac)
     return base_score * penalty
 
 def main():
@@ -148,6 +154,12 @@ def main():
                                             max_gap, min_points, min_freq_per_day)
         by_dev[dev] = []
         for seg in segs:
+            seg_sorted = seg.sort_values("ts").reset_index(drop=True)
+            expected_range = pd.date_range(seg_sorted["ts"].iloc[0], seg_sorted["ts"].iloc[-1], freq="h")
+            n_expected = len(expected_range)
+            n_actual = seg_sorted["ts"].nunique()
+            pct_imputed = 100 * (n_expected - n_actual) / n_expected if n_expected > 0 else 0
+
             sc = compute_custom_score(seg, **score_weights)
             info = {
                 "device": dev,
@@ -156,7 +168,8 @@ def main():
                 "count": len(seg),
                 "score": sc,
                 "interval_df": seg,
-                "outstanding": False
+                "outstanding": False,
+                "pct_imputed": pct_imputed
             }
             by_dev[dev].append(info)
             all_info.append(info)
@@ -171,7 +184,8 @@ def main():
         s, e = info["start"], info["end"]
         days = (e - s).days + 1
         pts = info["count"]
-        print(f"Device: {dev} | Range: {s.date()} → {e.date()} | Days: {days} | Points: {pts}")
+        pct_imp = info.get("pct_imputed", 0)
+        print(f"Device: {dev} | Range: {s.date()} → {e.date()} | Days: {days} | Points: {pts} | Imputed: {pct_imp:.2f}% ")
 
 
     for info in top:
